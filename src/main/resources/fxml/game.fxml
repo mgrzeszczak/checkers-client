@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:controller="pl.mg.checkers.controller.GameController" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+    <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="NEVER">
+        <children>
+            <Label fx:id="gameName" text="Game" />
+            <Button mnemonicParsing="false" fx:id="leaveButton" text="Leave" onAction="#onLeaveButtonClick" />
+        </children>
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        </padding>
+    </HBox>
+    <AnchorPane fx:id="anchorPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <children>
+            <Canvas fx:id="canvas" height="200.0" layoutX="184.0" layoutY="87.0" width="200.0"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        </children>
+    </AnchorPane>
+</children>
+</VBox>
