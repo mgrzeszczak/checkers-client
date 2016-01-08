@@ -32,7 +32,7 @@ public class MenuController {
             sceneService.showAlert(Alert.AlertType.ERROR,"Error","Invalid nickname","Please enter a valid nickname");
             return;
         }
-        connectionService.connect("greyshack.bbarwik.com",8080,nickField.getText());
+        connectionService.connect("localhost",8080,nickField.getText());
     }
 
 }

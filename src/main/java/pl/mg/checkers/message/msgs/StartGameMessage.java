@@ -11,6 +11,7 @@ public class StartGameMessage {
     private GameRepresentation gameRepresentation;
 
     public StartGameMessage() {
+        
     }
 
     public int getColor() {

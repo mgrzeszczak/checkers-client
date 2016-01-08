@@ -11,13 +11,17 @@ import java.util.*;
 @Service
 public class GameLogicService {
 
+    private static final int KING_SHIFT = 2;
+
+
     public Map<Integer,List<Integer>> calculateMoves(int[][] grid, int color){
         System.out.println("My color: "+color);
         List<Integer> pawns = new ArrayList<>();
         List<Integer> capturePawns = new ArrayList<>();
         for (int i = 0; i< Grid.SIZE; i++){
             for (int j=0;j<Grid.SIZE;j++){
-                if (grid[j][i]!=color) continue;
+                if (!isPlayersPawn(grid[j][i],color)) continue;
+                //if (grid[j][i]!=color) continue;
                 int ind = pawnIndex(j,i);
                 pawns.add(ind);
                 if (canCapture(grid,ind,color)) capturePawns.add(ind);
@@ -32,7 +36,7 @@ public class GameLogicService {
         }
     }
 
-    private Map<Integer,List<Integer>> calculateCaptureMoves(int[][] grid, int color, List<Integer> capturePawns){
+    public Map<Integer,List<Integer>> calculateCaptureMoves(int[][] grid, int color, List<Integer> capturePawns){
         int otherColor = (color%2)+1;
         Map<Integer,List<Integer>> moveMap = new HashMap<>();
         Map<Integer,Integer> pawnCaptureLength = new HashMap<>();
@@ -148,7 +152,7 @@ public class GameLogicService {
             int y = coords[1];
             List<Integer> moves = new ArrayList<>();
 
-            if (color==2) {
+            if (color == 2) {
                 if (x - 1 >= 0 & y - 1 >= 0) {
                     if (grid[x - 1][y - 1] == 0) moves.add(pawnIndex(x - 1, y - 1));
                 }
@@ -168,6 +172,42 @@ public class GameLogicService {
             if (!moves.isEmpty()) moveMap.put(i,moves);
         }
         return moveMap;
+    }
+
+    public boolean canCapture2(int[][]grid, int pawn, int color){
+        int[] coords = pawnCoords(pawn);
+        int x = coords[0];
+        int y = coords[1];
+        int otherColor = (color%2)+1;
+
+        if (!isKing(grid,pawn,color)){
+            if (x-2>=0 && y-2>=0){
+                if (isPlayersPawn(grid[x-1][y-1],otherColor) && grid[x-2][y-2]==0) return true;
+            }
+            if (x+2<Grid.SIZE && y-2>=0){
+                if (isPlayersPawn(grid[x+1][y-1],otherColor) && grid[x+2][y-2]==0) return true;
+            }
+            if (x-2>=0 && y+2<Grid.SIZE){
+                if (isPlayersPawn(grid[x-1][y+1],otherColor) && grid[x-2][y+2]==0) return true;
+            }
+            if (x+2<Grid.SIZE && y+2<Grid.SIZE){
+                if (isPlayersPawn(grid[x+1][y+1],otherColor) && grid[x+2][y+2]==0) return true;
+            }
+        } else {
+            for (int i = 2; x-i >= 0 && y-i >= 0 ; i++){
+                if (isPlayersPawn(grid[x-i+1][y-i+1],otherColor) && grid[x-i][y-i]==0) return true;
+            }
+            for (int i = 2; x+i < Grid.SIZE && y-i >= 0 ; i++){
+                if (isPlayersPawn(grid[x+i-1][y-i+1],otherColor) && grid[x+i][y-i]==0) return true;
+            }
+            for (int i = 2; x+i < Grid.SIZE && y+i < Grid.SIZE ; i++){
+                if (isPlayersPawn(grid[x+i-1][y+i-1],otherColor) && grid[x+i][y+i]==0) return true;
+            }
+            for (int i = 2; x-i >= 0 && y+i <Grid.SIZE ; i++){
+                if (isPlayersPawn(grid[x-i+1][y+i-1],otherColor) && grid[x-i][y+i]==0) return true;
+            }
+        }
+        return false;
     }
 
     public boolean canCapture(int[][] grid, int pawn, int color){
@@ -199,14 +239,26 @@ public class GameLogicService {
         return x*Grid.SIZE+y;
     }
 
+    public boolean isPlayersPawn(int pawnColor, int color){
+        return pawnColor==color || pawnColor==(color+KING_SHIFT);
+    }
 
+    public boolean isKing(int[][] grid, int pawn, int color){
+        int[] coords = pawnCoords(pawn);
+        return grid[coords[0]][coords[1]]==(color+KING_SHIFT);
+    }
 
+    public boolean isKing(int[][] grid, int x,int y , int color){
+        return grid[x][y]==(color+KING_SHIFT);
+    }
+
+    /*
     public List<int[]> getAvailableMoves(int[][] grid, int x, int y, int color){
         if (grid[x][y]!=color) return Collections.emptyList();
         List<int[]> out = new ArrayList<>();
 
         return null;
-    }
+    }*/
 
     private void copyArr(int[][] from, int[][] to){
         for (int i=0;i<Grid.SIZE;i++){

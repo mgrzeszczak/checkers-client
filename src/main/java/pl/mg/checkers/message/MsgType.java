@@ -16,7 +16,7 @@ public enum MsgType {
     /*
     Both
      */
-    createLobby, gamePawnMove, gameTurn, gridUpdateAck;
+    createLobby, gamePawnMove, gameTurn, gridUpdateAck, gameContinueTurn;
 
 
     public static boolean isValidType(String type){

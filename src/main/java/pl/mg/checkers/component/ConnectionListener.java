@@ -172,6 +172,11 @@ public class ConnectionListener implements Runnable{
                     Platform.runLater(()->gameController.toggleTurn(m.isPlayerTurn()));
                 });
                 break;
+            case gameContinueTurn:
+                jsonService.parseObject(content,GameContinueTurnMessage.class).ifPresent(m->{
+                    Platform.runLater(()->gameController.continueTurn(m));
+                });
+                break;
             default:
                 break;
         }

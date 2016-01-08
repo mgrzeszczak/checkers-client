@@ -17,6 +17,7 @@ import pl.mg.checkers.game.Game;
 import pl.mg.checkers.game.Grid;
 import pl.mg.checkers.message.MsgType;
 import pl.mg.checkers.message.TypedMessage;
+import pl.mg.checkers.message.msgs.GameContinueTurnMessage;
 import pl.mg.checkers.message.msgs.GamePawnMoveMessage;
 import pl.mg.checkers.message.msgs.StartGameMessage;
 import pl.mg.checkers.service.GameLogicService;
@@ -24,6 +25,7 @@ import pl.mg.checkers.service.MessengerService;
 import pl.mg.checkers.service.SceneService;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -265,4 +267,16 @@ public class GameController implements Initializable {
         draw(grid);
         messengerService.send(new TypedMessage(MsgType.gridUpdateAck,null));
     }
+
+    public synchronized void continueTurn(GameContinueTurnMessage m){
+        if (!m.isPlayerTurn()) return;
+        Map<Integer, List<Integer>> moves = gameLogicService.calculateCaptureMoves(game.getGrid().getGrid(), game
+                .getColor(), new ArrayList<Integer>() {{
+            add(m.getPawnIndex());
+        }});
+        game.setMoves(moves);
+        drawWithMovablePawns(game.getGrid().getGrid(),moves);
+        toggleMouseClick(true);
+    }
+
 }
